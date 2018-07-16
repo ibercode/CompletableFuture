@@ -30,7 +30,7 @@ public class AsynchronousApp {
 		
 		getProductCF(name)
 			.thenCompose(prod -> getPriceCF(prod))
-			.thenCombine(getExchangeService(currency),(price,exchangeRate) -> exchange(price, exchangeRate))
+			.thenCombine(getExchangeService(currency),(price,exchangeRate) -> getTotalPrice(price, exchangeRate))
 			.thenAccept(localPrice -> System.out.printf("%s cost is %.2f %s", name, localPrice, currency))
 			.join();
 	}
@@ -47,7 +47,7 @@ public class AsynchronousApp {
 		return CompletableFuture.supplyAsync(() -> exchangeService.getExchangeRate( currency));
 	}
 	
-	private static double exchange(double price, double exchangeRate)
+	private static double getTotalPrice(double price, double exchangeRate)
     {
         return price * exchangeRate;
     }
